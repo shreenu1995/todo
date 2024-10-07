@@ -1,5 +1,5 @@
 trigger:
-- main  # Automatically triggers pipeline on pushes to the 'main' branch.
+- master  # Automatically triggers pipeline on pushes to the 'main' branch.
 
 pool:
   name: 'testapp' # Or the pool name you created
