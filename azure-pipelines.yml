@@ -71,3 +71,19 @@ stages:
               appName: 'todoprod1'
               package: '$(Pipeline.Workspace)/drop/**/*.zip'
 
+- stage: Test
+  jobs:
+    - job: TestJob
+      pool:
+        name: 'testapp'
+        vmImage: 'self-hosted'
+      steps:
+        - script: echo "Running tests..."
+          displayName: 'Run Tests'
+        - script: dotnet test MyProject.Tests/MyProject.Tests.csproj --logger "trx;LogFileName=results.trx"
+          displayName: 'Run Unit Tests'
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'VSTest'
+            testResultsFiles: '**/*.trx'
+            searchFolder: '$(System.DefaultWorkingDirectory)'
