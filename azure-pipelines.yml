@@ -52,3 +52,22 @@ stages:
               appName: 'TodoApp'
               package: '$(Pipeline.Workspace)/drop/**/*.zip'
 
+- stage: DeployToProd
+  displayName: 'Deploy to Production'
+  dependsOn: DeployToDev
+  jobs:
+  - deployment: ProdDeploy
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: 'drop'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Free Trial(23d440fd-aa7d-4713-aaee-71a60674fa04)'
+              appName: 'TodoApp'
+              package: '$(Pipeline.Workspace)/drop/**/*.zip'
+
