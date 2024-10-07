@@ -47,22 +47,3 @@ stages:
               appName: '<Your Dev App Service Name>'
               package: '$(Pipeline.Workspace)/drop/**/*.zip'
 
-# Third stage: Deploy to Production
-- stage: DeployToProd
-  displayName: 'Deploy to Production'
-  dependsOn: DeployToDev
-  jobs:
-  - deployment: ProdDeploy
-    environment: 'Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              artifactName: 'drop'
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: '<Your Azure Subscription>'
-              appName: '<Your Prod App Service Name>'
-              package: '$(Pipeline.Workspace)/drop/**/*.zip'
