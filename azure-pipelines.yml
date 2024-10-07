@@ -43,7 +43,7 @@ stages:
               artifactName: 'drop'
           - task: AzureWebApp@1
             inputs:
-              azureSubscription: '<Your Azure Subscription>'
-              appName: '<Your Dev App Service Name>'
+              azureSubscription: '23d440fd-aa7d-4713-aaee-71a60674fa04'
+              appName: 'TodoApp'
               package: '$(Pipeline.Workspace)/drop/**/*.zip'
 
