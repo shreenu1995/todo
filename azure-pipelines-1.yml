@@ -1,0 +1,67 @@
+trigger:
+- main  # Automatically triggers pipeline on pushes to the 'main' branch.
+
+pool:
+  vmImage: 'ubuntu-latest'  # Specify the virtual machine image used to run the job.
+
+stages:
+# First stage: Build
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--output $(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'drop'
+
+# Second stage: Deploy to Development
+- stage: DeployToDev
+  displayName: 'Deploy to Development'
+  dependsOn: Build
+  jobs:
+  - deployment: DevDeploy
+    environment: 'Development'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: 'drop'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '<Your Azure Subscription>'
+              appName: '<Your Dev App Service Name>'
+              package: '$(Pipeline.Workspace)/drop/**/*.zip'
+
+# Third stage: Deploy to Production
+- stage: DeployToProd
+  displayName: 'Deploy to Production'
+  dependsOn: DeployToDev
+  jobs:
+  - deployment: ProdDeploy
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: 'drop'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '<Your Azure Subscription>'
+              appName: '<Your Prod App Service Name>'
+              package: '$(Pipeline.Workspace)/drop/**/*.zip'
