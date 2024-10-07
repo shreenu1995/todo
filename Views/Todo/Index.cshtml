@@ -1,0 +1,17 @@
+@model IEnumerable<TodoApp.Models.TodoItem>
+
+<h2>Todo List</h2>
+
+<form asp-action="AddTask" method="post">
+    <input type="text" name="task" placeholder="Enter a new task" />
+    <button type="submit">Add</button>
+</form>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @item.Task - @if (item.IsCompleted) { <span>Completed</span> } else { <span>Pending</span> }
+        </li>
+    }
+</ul>
