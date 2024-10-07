@@ -2,8 +2,9 @@ trigger:
 - main  # Automatically triggers pipeline on pushes to the 'main' branch.
 
 pool:
-  vmImage: 'ubuntu-latest'  # Specify the virtual machine image used to run the job.
-
+  name: 'testapp' # Or the pool name you created
+  vmImage: 'self-hosted'
+  
 stages:
 # First stage: Build
 - stage: Build
