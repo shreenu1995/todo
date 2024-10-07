@@ -1,9 +1,4 @@
 trigger:
-- task: DotNetCoreCLI@2
-  inputs:
-    azureSubscription: 'Free Trial(23d440fd-aa7d-4713-aaee-71a60674fa04)'
-    command: 'build'
-    projects: 'https://dev.azure.com/shreenu1995/TodoApp'
 - master
 
 pool:
@@ -36,4 +31,3 @@ steps:
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
-  
