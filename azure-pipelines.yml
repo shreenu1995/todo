@@ -1,8 +1,10 @@
 trigger:
 - master
 
+
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'testapp' # Or the pool name you created
+  vmImage: 'self-hosted'
 
 steps:
 - task: UseDotNet@2
